@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>全渠道电商经营看板 · 2024.01–2025.08</title>
+<style>
+  * { box-sizing: border-box; }
+  :root {
+    --bg: #f4f6fa;
+    --panel: #ffffff;
+    --ink: #0f172a;
+    --ink2: #334155;
+    --muted: #79879a;
+    --line: #e6eaf2;
+    --accent: #2f6bff;
+    --good: #0e9f6e;
+    --bad: #d64545;
+    --warn: #b8792a;
+    --tianmao: #2f6bff;
+    --jd: #0aa88f;
+    --douyin: #232936;
+    --pdd: #df6b3a;
+  }
+  html { background: var(--bg); }
+  body {
+    margin: 0;
+    color: var(--ink);
+    background: var(--bg);
+    font-family: "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    font-size: 14px;
+  }
+  .num { font-variant-numeric: tabular-nums; }
+  .top {
+    color: #fff;
+    background:
+      radial-gradient(900px 420px at 8% -40%, rgba(47,107,255,.55) 0%, rgba(47,107,255,0) 62%),
+      radial-gradient(700px 340px at 88% -20%, rgba(10,168,143,.30) 0%, rgba(10,168,143,0) 60%),
+      linear-gradient(112deg, #0a1220 0%, #101b2e 58%, #0b1424 100%);
+    border-bottom: 1px solid rgba(255,255,255,.06);
+  }
+  .top-inner {
+    max-width: 1560px;
+    margin: 0 auto;
+    padding: 26px 30px 26px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px;
+  }
+  .kicker {
+    font-size: 11px;
+    letter-spacing: .22em;
+    color: #8fa3c0;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  h1 {
+    margin: 0;
+    font-size: 27px;
+    font-weight: 600;
+    letter-spacing: .5px;
+  }
+  .sub {
+    margin-top: 9px;
+    color: #a9b8cd;
+    font-size: 12.5px;
+    letter-spacing: .2px;
+  }
+  .sub b { color: #dbe6f5; font-weight: 500; }
+  .top-meta { text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 9px; }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 12px;
+    border: 1px solid rgba(255,255,255,.22);
+    border-radius: 999px;
+    font-size: 11px;
+    letter-spacing: .12em;
+    color: #dce7f4;
+    background: rgba(255,255,255,.06);
+  }
+  .badge .dot { width: 7px; height: 7px; border-radius: 50%; background: #f2b84b; box-shadow: 0 0 0 3px rgba(242,184,75,.18); }
+  .top-note { font-size: 11px; color: #7f93ae; }
+
+  .shell { max-width: 1560px; margin: 0 auto; padding: 0 30px 34px; }
+
+  .kpis {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: -22px;
+  }
+  .kpi {
+    position: relative;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 15px 17px 13px;
+    box-shadow: 0 12px 28px -18px rgba(15,23,42,.45);
+    overflow: hidden;
+  }
+  .kpi::before {
+    content: "";
+    position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+    background: var(--accent);
+    opacity: .9;
+  }
+  .kpi-label { font-size: 11.5px; color: var(--muted); letter-spacing: .04em; }
+  .kpi-value { margin-top: 8px; font-size: 26px; font-weight: 600; letter-spacing: -.4px; line-height: 1.05; }
+  .kpi-unit { font-size: 12px; font-weight: 400; color: var(--muted); margin-left: 4px; letter-spacing: 0; }
+  .kpi-foot { margin-top: 10px; display: flex; gap: 12px; font-size: 11px; color: var(--muted); }
+  .trend { display: inline-flex; align-items: center; gap: 2px; font-weight: 600; }
+  .up-good, .down-good { color: var(--good); }
+  .up-bad, .down-bad { color: var(--bad); }
+  .flat { color: var(--muted); }
+
+  .toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin: 20px 0 14px;
+  }
+  .filter-group { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .filter-label { font-size: 11.5px; color: var(--muted); margin-right: 2px; letter-spacing: .06em; }
+  .fbtn {
+    border: 1px solid var(--line);
+    background: #fff;
+    color: var(--ink2);
+    font-size: 12px;
+    padding: 6px 13px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all .15s ease;
+    font-family: inherit;
+  }
+  .fbtn:hover { border-color: #cbd5e1; }
+  .fbtn.active { background: var(--ink); border-color: var(--ink); color: #fff; }
+  .toolbar-note { font-size: 11.5px; color: var(--muted); }
+
+  .grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 16px; }
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 0;
+    box-shadow: 0 1px 2px rgba(15,23,42,.03);
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+  .s7 { grid-column: span 7; }
+  .s5 { grid-column: span 5; }
+  .s4 { grid-column: span 4; }
+  .s3 { grid-column: span 3; }
+  .panel-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 15px 18px 4px;
+  }
+  .panel-title { font-size: 13.5px; font-weight: 600; letter-spacing: .01em; }
+  .panel-sub { font-size: 11px; color: var(--muted); margin-top: 3px; }
+  .panel-tag { font-size: 10.5px; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 3px 8px; white-space: nowrap; }
+  .chart { width: 100%; }
+  .h-trend { height: 312px; }
+  .h-mid { height: 252px; }
+  .panel-body { padding: 4px 12px 12px; flex: 1; }
+
+  .ptable { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .ptable th {
+    text-align: right;
+    color: var(--muted);
+    font-weight: 500;
+    font-size: 11px;
+    padding: 10px 8px 8px;
+    border-bottom: 1px solid var(--line);
+    letter-spacing: .02em;
+    white-space: nowrap;
+  }
+  .ptable th:first-child, .ptable td:first-child { text-align: left; padding-left: 18px; }
+  .ptable th:last-child, .ptable td:last-child { padding-right: 18px; }
+  .ptable td { padding: 11px 8px; border-bottom: 1px solid #f1f4f9; text-align: right; }
+  .ptable tr:last-child td { border-bottom: none; }
+  .ptable tr.active td { background: #f7f9ff; }
+  .pname { display: inline-flex; align-items: center; gap: 7px; font-weight: 600; }
+  .pdot { width: 8px; height: 8px; border-radius: 50%; }
+  .share { display: flex; align-items: center; gap: 8px; justify-content: flex-end; }
+  .share-track { width: 54px; height: 5px; border-radius: 3px; background: #eef1f7; overflow: hidden; }
+  .share-fill { height: 100%; border-radius: 3px; }
+  .rate-flag { display: inline-flex; align-items: center; gap: 5px; }
+  .rdot { width: 6px; height: 6px; border-radius: 50%; }
+  .muted { color: var(--muted); }
+
+  .anomaly-list { padding: 4px 18px 14px; display: flex; flex-direction: column; gap: 0; }
+  .arow {
+    display: grid;
+    grid-template-columns: 18px 1fr 84px 62px 76px 104px;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 0;
+    border-bottom: 1px solid #f1f4f9;
+    font-size: 12px;
+  }
+  .arow:last-child { border-bottom: none; }
+  .sev { width: 8px; height: 8px; border-radius: 50%; }
+  .sev.high { background: #d64545; box-shadow: 0 0 0 3px rgba(214,69,69,.12); }
+  .sev.medium { background: #d9a441; box-shadow: 0 0 0 3px rgba(217,164,65,.12); }
+  .arow .combo { font-weight: 600; }
+  .arow .combo span { font-weight: 500; color: var(--muted); margin-left: 6px; font-size: 11px; }
+  .arow .when { color: var(--muted); font-size: 11.5px; }
+  .arow .pv { text-align: right; font-weight: 600; }
+  .arow .delta { text-align: right; color: var(--bad); font-weight: 600; }
+  .arow .ord { text-align: right; color: var(--muted); font-size: 11px; }
+  .arow.head {
+    font-size: 10.5px; color: #9aa6b6; padding: 2px 0 6px; border-bottom: 1px solid var(--line);
+  }
+  .arow.head .when, .arow.head .pv, .arow.head .delta, .arow.head .ord { color: #9aa6b6; font-weight: 500; }
+  .arow.head .combo { font-weight: 500; }
+  .empty { color: var(--muted); font-size: 12px; padding: 22px 18px; }
+
+  .insights { padding: 6px 20px 16px; display: flex; flex-direction: column; gap: 12px; }
+  .insight { display: flex; gap: 11px; }
+  .idx {
+    flex: 0 0 auto;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: #eef3ff;
+    color: #2f6bff;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 2px;
+  }
+  .insight h4 { margin: 0 0 3px; font-size: 12.5px; font-weight: 600; }
+  .insight p { margin: 0; font-size: 11.5px; line-height: 1.62; color: #4b5b70; }
+
+  .foot {
+    margin-top: 18px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 26px;
+    align-items: flex-start;
+    justify-content: space-between;
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.7;
+    border-top: 1px solid var(--line);
+    padding-top: 14px;
+  }
+  .foot b { color: var(--ink2); font-weight: 600; }
+  .foot a { color: #2f6bff; text-decoration: none; }
+  .foot a:hover { text-decoration: underline; }
+
+  @media (max-width: 1280px) {
+    .kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .s7, .s5, .s4 { grid-column: span 6; }
+  }
+  @media (max-width: 860px) {
+    .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .s7, .s5, .s4 { grid-column: span 12; }
+    .top-inner { flex-direction: column; align-items: flex-start; }
+    .top-meta { align-items: flex-start; text-align: left; }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-inner">
+    <div>
+      <div class="kicker">Portfolio / E-commerce Analytics</div>
+      <h1>全渠道电商经营看板</h1>
+      <div class="sub">
+        天猫 · 京东 · 抖音 · 拼多多　｜　<b>2024.01 – 2025.08</b>　｜　73,080 条日 × 平台 × 品类 × 渠道明细
+      </div>
+    </div>
+    <div class="top-meta">
+      <div class="badge"><span class="dot"></span> SYNTHETIC DATA · 合成数据</div>
+      <div class="top-note">固定随机种子生成，可一键复现，不含任何真实企业数据</div>
+    </div>
+  </div>
+</header>
+
+<main class="shell">
+
+  <section class="kpis" id="kpis"></section>
+
+  <div class="toolbar">
+    <div class="filter-group">
+      <span class="filter-label">平台筛选</span>
+      <button class="fbtn active" data-platform="全部">全部平台</button>
+      <button class="fbtn" data-platform="天猫">天猫</button>
+      <button class="fbtn" data-platform="京东">京东</button>
+      <button class="fbtn" data-platform="抖音">抖音</button>
+      <button class="fbtn" data-platform="拼多多">拼多多</button>
+    </div>
+    <div class="toolbar-note" id="view-note">当前视图：最新完整月 2025-08，全平台</div>
+  </div>
+
+  <section class="grid">
+
+    <div class="panel s7">
+      <div class="panel-head">
+        <div>
+          <div class="panel-title">GMV 日趋势与大促脉冲</div>
+          <div class="panel-sub">灰色区间为大促窗口；实线为 7 日移动平均，用于过滤星期波动</div>
+        </div>
+        <span class="panel-tag" id="trend-tag">全部平台</span>
+      </div>
+      <div class="chart h-trend" id="chart-trend"></div>
+    </div>
+
+    <div class="panel s5">
+      <div class="panel-head">
+        <div>
+          <div class="panel-title">平台结构对比</div>
+          <div class="panel-sub">GMV 占比 / 客单价 / 退款率 / 履约达成率</div>
+        </div>
+        <span class="panel-tag">全周期</span>
+      </div>
+      <div class="panel-body">
+        <table class="ptable">
+          <thead>
+            <tr>
+              <th>平台</th><th>GMV 占比</th><th>GMV</th><th>客单价</th><th>退款率</th><th>48h 达成</th>
+            </tr>
+          </thead>
+          <tbody id="platform-rows"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="panel s4">
+      <div class="panel-head">
+        <div>
+          <div class="panel-title">品类贡献</div>
+          <div class="panel-sub">按 GMV 排序，标签为占比</div>
+        </div>
+        <span class="panel-tag" id="cat-tag">全部平台</span>
+      </div>
+      <div class="chart h-mid" id="chart-category"></div>
+    </div>
+
+    <div class="panel s4">
+      <div class="panel-head">
+        <div>
+          <div class="panel-title">渠道结构与退款率</div>
+          <div class="panel-sub">柱为 GMV，折线为渠道退款率（右轴）</div>
+        </div>
+        <span class="panel-tag" id="ch-tag">全部平台</span>
+      </div>
+      <div class="chart h-mid" id="chart-channel"></div>
+    </div>
+
+    <div class="panel s4">
+      <div class="panel-head">
+        <div>
+          <div class="panel-title">履约时效分布</div>
+          <div class="panel-sub">各平台分桶订单占比，右侧标注 48h 内达成率</div>
+        </div>
+        <span class="panel-tag">全周期</span>
+      </div>
+      <div class="chart h-mid" id="chart-sla"></div>
+    </div>
+
+    <div class="panel s7">
+      <div class="panel-head">
+        <div>
+          <div class="panel-title">退款率异常预警</div>
+          <div class="panel-sub">平台 × 品类月度退款率显著高于前 3 个月基线（≥2.5pp 且相对抬升 ≥18%）</div>
+        </div>
+        <span class="panel-tag" id="anomaly-tag">全部平台</span>
+      </div>
+      <div class="anomaly-list" id="anomaly-list"></div>
+    </div>
+
+    <div class="panel s5">
+      <div class="panel-head">
+        <div>
+          <div class="panel-title">关键发现</div>
+          <div class="panel-sub">由 scripts/metrics.py 根据数据自动生成</div>
+        </div>
+        <span class="panel-tag">全周期</span>
+      </div>
+      <div class="insights" id="insights"></div>
+    </div>
+
+  </section>
+
+  <footer class="foot">
+    <div>
+      <b>口径</b>：GMV 为支付订单金额（未扣退款）；客单价 = GMV / 订单量；转化率 = 支付订单数 / 访客数；
+      退款率 = 退款订单数 / 支付订单数（按原订单日期归因）；48h 履约达成率 = 48h 内出库订单 / 总订单。
+    </div>
+    <div>
+      <b>数据</b>：合成数据，非真实经营数据。<a href="../docs/powerbi-replication.md">Power BI 复刻</a> ·
+      <a href="../docs/finebi-replication.md">帆软 FineBI 复刻</a> ·
+      <a href="../README.md">README</a>
+    </div>
+  </footer>
+
+</main>
+
+<script id="dashboard-data" type="application/json">__DATA_JSON__</script>
+<script>__ECHARTS__</script>
+<script>
+(function () {
+  const DATA = JSON.parse(document.getElementById('dashboard-data').textContent);
+  const META = DATA.meta;
+  const COLORS = { '天猫': '#2f6bff', '京东': '#0aa88f', '抖音': '#232936', '拼多多': '#df6b3a' };
+  const SLA_COLORS = ['#0b8f6a', '#4aa78a', '#e2c178', '#e0904f', '#c74b4b'];
+  const BUCKETS = ['0-12h', '12-24h', '24-48h', '48-72h', '72h+'];
+  const nf = new Intl.NumberFormat('zh-CN');
+  const fmtInt = v => nf.format(Math.round(v));
+  const fmtMoney = v => v >= 1e8 ? (v / 1e8).toFixed(2) + ' 亿' : fmtInt(v / 1e4) + ' 万';
+  const fmtSigned = v => (v >= 0 ? '+' : '') + (v * 100).toFixed(1) + '%';
+  const axisMoney = v => v >= 1e8 ? (v / 1e8).toFixed(1) + '亿' : Math.round(v / 1e4) + '万';
+
+  let active = '全部';
+  const charts = {};
+
+  function agg(rows, platform) {
+    const out = { gmv: 0, orders: 0, visitors: 0, refund_orders: 0, refund_amount: 0, fast48: 0, sla_orders: 0, hours: 0 };
+    rows.forEach(r => {
+      if (platform !== '全部' && r.platform !== platform) return;
+      out.gmv += r.gmv; out.orders += r.orders; out.visitors += r.visitors;
+      out.refund_orders += r.refund_orders; out.refund_amount += r.refund_amount;
+      out.fast48 += r.sla48_rate * r.sla_orders; out.sla_orders += r.sla_orders;
+      out.hours += r.avg_hours * r.sla_orders;
+    });
+    out.aov = out.orders ? out.gmv / out.orders : 0;
+    out.cvr = out.visitors ? out.orders / out.visitors : 0;
+    out.refund_rate = out.orders ? out.refund_orders / out.orders : 0;
+    out.sla48 = out.sla_orders ? out.fast48 / out.sla_orders : 0;
+    out.avg_hours = out.sla_orders ? out.hours / out.sla_orders : 0;
+    return out;
+  }
+
+  function monthAgg(platform, month) {
+    return agg(DATA.monthly_platform.filter(r => r.month === month), platform);
+  }
+
+  // ---------- KPI ----------
+  const KPI_DEF = [
+    { key: 'gmv', label: 'GMV（月度）', unit: '万元', fmt: v => fmtInt(v / 1e4), inverse: false },
+    { key: 'orders', label: '订单量', unit: '单', fmt: v => fmtInt(v), inverse: false },
+    { key: 'aov', label: '客单价', unit: '元', fmt: v => '¥' + fmtInt(v), inverse: false },
+    { key: 'cvr', label: '支付转化率', unit: '%', fmt: v => (v * 100).toFixed(2), inverse: false },
+    { key: 'refund_rate', label: '退款率', unit: '%', fmt: v => (v * 100).toFixed(1), inverse: true },
+    { key: 'sla48', label: '48h 履约达成率', unit: '%', fmt: v => (v * 100).toFixed(1), inverse: false },
+  ];
+
+  function renderKpis() {
+    const cur = monthAgg(active, META.latest_month);
+    const prev = monthAgg(active, META.prev_month);
+    const yoy = monthAgg(active, META.yoy_month);
+    const host = document.getElementById('kpis');
+    host.innerHTML = '';
+    KPI_DEF.forEach(def => {
+      const mom = prev[def.key] ? (cur[def.key] - prev[def.key]) / prev[def.key] : null;
+      const yv = yoy[def.key] ? (cur[def.key] - yoy[def.key]) / yoy[def.key] : null;
+      const card = document.createElement('div');
+      card.className = 'kpi';
+      card.title = {
+        gmv: '支付订单金额合计，未扣退款',
+        orders: '支付订单数',
+        aov: 'GMV / 订单量',
+        cvr: '支付订单数 / 访客数（访客未跨渠道去重）',
+        refund_rate: '退款订单数 / 支付订单数，按原订单日期归因',
+        sla48: '48h 内出库订单 / 总订单（0-12h / 12-24h / 24-48h 分桶）',
+      }[def.key];
+      card.innerHTML =
+        '<div class="kpi-label">' + def.label + '</div>' +
+        '<div class="kpi-value num">' + def.fmt(cur[def.key]) +
+        '<span class="kpi-unit">' + def.unit + '</span></div>' +
+        '<div class="kpi-foot">' +
+        chip('环比', mom, def.inverse) + chip('同比', yv, def.inverse) +
+        '</div>';
+      host.appendChild(card);
+    });
+  }
+
+  function chip(label, v, inverse) {
+    if (v === null || !isFinite(v)) return '<span class="flat">' + label + ' —</span>';
+    const good = inverse ? v < 0 : v > 0;
+    const cls = Math.abs(v) < 0.0005 ? 'flat' : (good ? 'up-good' : 'up-bad');
+    return '<span class="trend ' + cls + '">' + label + ' ' + fmtSigned(v) + '</span>';
+  }
+
+  // ---------- 趋势 ----------
+  function renderTrend() {
+    const byDate = new Map();
+    DATA.daily_platform.forEach(r => {
+      if (active !== '全部' && r.platform !== active) return;
+      byDate.set(r.date, (byDate.get(r.date) || 0) + r.gmv);
+    });
+    const dates = Array.from(byDate.keys()).sort();
+    const values = dates.map(d => byDate.get(d));
+    const ma = values.map((_, i) => {
+      const s = Math.max(0, i - 6);
+      const win = values.slice(s, i + 1);
+      return win.reduce((a, b) => a + b, 0) / win.length;
+    });
+    const areas = META.promo_windows.map(w => {
+      const days = (new Date(w.end) - new Date(w.start)) / 86400000 + 1;
+      return [{
+        name: w.name,
+        xAxis: w.start,
+        label: days >= 10 ? { show: true, position: 'insideTop', color: '#94a3b8', fontSize: 10, offset: [0, 6] } : { show: false },
+        itemStyle: { color: 'rgba(15,23,42,0.045)' },
+      }, { xAxis: w.end }];
+    });
+    const option = {
+      animationDuration: 600,
+      grid: { left: 58, right: 22, top: 26, bottom: 34 },
+      tooltip: {
+        trigger: 'axis',
+        backgroundColor: '#fff',
+        borderColor: '#e6eaf2',
+        borderWidth: 1,
+        padding: [9, 12],
+        textStyle: { color: '#0f172a', fontSize: 11.5 },
+        extraCssText: 'box-shadow:0 10px 24px -12px rgba(15,23,42,.35);border-radius:8px;',
+        axisPointer: { type: 'line', lineStyle: { color: '#cbd5e1', width: 1 } },
+        formatter: p => {
+          const d = p[0].axisValue;
+          const rows = DATA.daily_platform.filter(r => r.date === d && (active === '全部' || r.platform === active));
+          const total = rows.reduce((a, r) => a + r.gmv, 0);
+          let html = '<div style="font-size:11px;color:#79879a;margin-bottom:5px">' + d + '</div>';
+          html += '<div style="font-weight:600">GMV　' + fmtMoney(total) + '</div>';
+          if (active === '全部') {
+            rows.slice().sort((a, b) => b.gmv - a.gmv).forEach(r => {
+              html += '<div style="display:flex;justify-content:space-between;gap:18px;color:#4b5b70;font-size:11px">' +
+                '<span>' + r.platform + '</span><span>' + fmtMoney(r.gmv) + '</span></div>';
+            });
+          }
+          return html;
+        },
+      },
+      xAxis: {
+        type: 'category', boundaryGap: false, data: dates,
+        axisLine: { lineStyle: { color: '#e6eaf2' } },
+        axisTick: { show: false },
+        axisLabel: { color: '#79879a', fontSize: 10.5, interval: Math.max(0, Math.floor(dates.length / 22)), formatter: v => v.slice(2, 7).replace('-', '/') },
+      },
+      yAxis: {
+        type: 'value',
+        axisLine: { show: false }, axisTick: { show: false },
+        splitLine: { lineStyle: { color: '#f0f3f8' } },
+        axisLabel: { color: '#79879a', fontSize: 10.5, formatter: axisMoney },
+      },
+      series: [
+        {
+          name: '日 GMV', type: 'line', data: values, symbol: 'none', smooth: false,
+          lineStyle: { width: 1, color: 'rgba(47,107,255,.42)' },
+          areaStyle: {
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              { offset: 0, color: 'rgba(47,107,255,.20)' },
+              { offset: 1, color: 'rgba(47,107,255,.02)' },
+            ]),
+          },
+          markArea: { silent: true, data: areas },
+        },
+        {
+          name: '7 日均线', type: 'line', data: ma, symbol: 'none', smooth: true,
+          lineStyle: { width: 2.4, color: '#2f6bff' }, z: 3,
+        },
+      ],
+    };
+    charts.trend.setOption(option, true);
+  }
+
+  // ---------- 平台表 ----------
+  function renderPlatforms() {
+    const body = document.getElementById('platform-rows');
+    body.innerHTML = '';
+    DATA.platform_totals.slice().sort((a, b) => b.gmv - a.gmv).forEach(p => {
+      const tr = document.createElement('tr');
+      tr.className = active === p.platform ? 'active' : '';
+      const flag = p.refund_rate >= 0.2 ? '#d64545' : p.refund_rate >= 0.1 ? '#d9a441' : '#0e9f6e';
+      tr.innerHTML =
+        '<td><span class="pname"><span class="pdot" style="background:' + COLORS[p.platform] + '"></span>' + p.platform + '</span></td>' +
+        '<td><span class="share"><span class="share-track"><span class="share-fill" style="width:' +
+          (p.gmv_share * 100).toFixed(0) + '%;background:' + COLORS[p.platform] + '"></span></span>' +
+          '<span class="num">' + (p.gmv_share * 100).toFixed(1) + '%</span></span></td>' +
+        '<td class="num">' + fmtMoney(p.gmv) + '</td>' +
+        '<td class="num">¥' + fmtInt(p.aov) + '</td>' +
+        '<td class="num"><span class="rate-flag"><span class="rdot" style="background:' + flag + '"></span>' +
+          (p.refund_rate * 100).toFixed(1) + '%</span></td>' +
+        '<td class="num">' + (p.sla48_rate * 100).toFixed(1) + '%</td>';
+      body.appendChild(tr);
+    });
+  }
+
+  // ---------- 品类 ----------
+  function renderCategory() {
+    const rows = DATA.category_platform.filter(r => active === '全部' || r.platform === active);
+    const map = new Map();
+    rows.forEach(r => {
+      const cur = map.get(r.category) || { category: r.category, gmv: 0, orders: 0, refund_orders: 0 };
+      cur.gmv += r.gmv; cur.orders += r.orders; cur.refund_orders += r.refund_orders;
+      map.set(r.category, cur);
+    });
+    const list = Array.from(map.values()).sort((a, b) => a.gmv - b.gmv);
+    const total = list.reduce((a, b) => a + b.gmv, 0);
+    const option = {
+      animationDuration: 500,
+      grid: { left: 72, right: 54, top: 12, bottom: 10 },
+      tooltip: {
+        trigger: 'axis', axisPointer: { type: 'shadow', shadowStyle: { color: 'rgba(47,107,255,.05)' } },
+        backgroundColor: '#fff', borderColor: '#e6eaf2', padding: [9, 12],
+        textStyle: { color: '#0f172a', fontSize: 11.5 },
+        extraCssText: 'box-shadow:0 10px 24px -12px rgba(15,23,42,.35);border-radius:8px;',
+        formatter: p => {
+          const r = list[p[0].dataIndex];
+          return '<div style="font-weight:600;margin-bottom:4px">' + r.category + '</div>' +
+            '<div style="color:#4b5b70;font-size:11px">GMV ' + fmtMoney(r.gmv) + '</div>' +
+            '<div style="color:#4b5b70;font-size:11px">占比 ' + (r.gmv / total * 100).toFixed(1) + '%　退款率 ' +
+            (r.refund_orders / r.orders * 100).toFixed(1) + '%</div>';
+        },
+      },
+      xAxis: { type: 'value', show: false },
+      yAxis: {
+        type: 'category', data: list.map(r => r.category),
+        axisLine: { show: false }, axisTick: { show: false },
+        axisLabel: { color: '#334155', fontSize: 11.5 },
+      },
+      series: [{
+        type: 'bar', data: list.map(r => r.gmv), barWidth: 13,
+        itemStyle: {
+          borderRadius: [0, 7, 7, 0],
+          color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
+            { offset: 0, color: 'rgba(47,107,255,.98)' },
+            { offset: 1, color: 'rgba(47,107,255,.55)' },
+          ]),
+        },
+        label: {
+          show: true, position: 'right', color: '#79879a', fontSize: 10.5,
+          formatter: p => (list[p.dataIndex].gmv / total * 100).toFixed(1) + '%',
+        },
+      }],
+    };
+    charts.category.setOption(option, true);
+  }
+
+  // ---------- 渠道 ----------
+  function renderChannel() {
+    const rows = DATA.channel_platform.filter(r => active === '全部' || r.platform === active);
+    const map = new Map();
+    rows.forEach(r => {
+      const cur = map.get(r.channel) || { channel: r.channel, gmv: 0, orders: 0, refund_orders: 0 };
+      cur.gmv += r.gmv; cur.orders += r.orders; cur.refund_orders += r.refund_orders;
+      map.set(r.channel, cur);
+    });
+    const list = Array.from(map.values()).sort((a, b) => b.gmv - a.gmv);
+    const option = {
+      animationDuration: 500,
+      grid: { left: 46, right: 46, top: 18, bottom: 30 },
+      tooltip: {
+        trigger: 'axis', axisPointer: { type: 'shadow', shadowStyle: { color: 'rgba(15,23,42,.04)' } },
+        backgroundColor: '#fff', borderColor: '#e6eaf2', padding: [9, 12],
+        textStyle: { color: '#0f172a', fontSize: 11.5 },
+        extraCssText: 'box-shadow:0 10px 24px -12px rgba(15,23,42,.35);border-radius:8px;',
+        formatter: ps => {
+          const r = list[ps[0].dataIndex];
+          return '<div style="font-weight:600;margin-bottom:4px">' + r.channel + '</div>' +
+            '<div style="font-size:11px;color:#4b5b70">GMV ' + fmtMoney(r.gmv) + '</div>' +
+            '<div style="font-size:11px;color:#4b5b70">订单 ' + fmtInt(r.orders) + '</div>' +
+            '<div style="font-size:11px;color:#4b5b70">退款率 ' + (r.refund_orders / r.orders * 100).toFixed(1) + '%</div>';
+        },
+      },
+      xAxis: {
+        type: 'category', data: list.map(r => r.channel),
+        axisLine: { lineStyle: { color: '#e6eaf2' } }, axisTick: { show: false },
+        axisLabel: { color: '#79879a', fontSize: 10.5, interval: 0 },
+      },
+      yAxis: [
+        { type: 'value', axisLine: { show: false }, axisTick: { show: false }, splitLine: { lineStyle: { color: '#f0f3f8' } }, axisLabel: { color: '#79879a', fontSize: 10, formatter: axisMoney } },
+        { type: 'value', axisLine: { show: false }, axisTick: { show: false }, splitLine: { show: false }, axisLabel: { color: '#79879a', fontSize: 10, formatter: v => (v * 100).toFixed(0) + '%' }, max: v => Math.min(1, Math.max(0.4, v.max * 1.25)) },
+      ],
+      series: [
+        {
+          name: 'GMV', type: 'bar', data: list.map(r => r.gmv), barWidth: 20,
+          itemStyle: { borderRadius: [7, 7, 0, 0], color: 'rgba(47,107,255,.80)' },
+        },
+        {
+          name: '退款率', type: 'line', yAxisIndex: 1, data: list.map(r => r.refund_orders / r.orders),
+          symbol: 'circle', symbolSize: 6, smooth: true,
+          lineStyle: { width: 2, color: '#d64545' },
+          itemStyle: { color: '#d64545' },
+          label: { show: true, position: 'top', color: '#d64545', fontSize: 10, formatter: p => (p.value * 100).toFixed(1) + '%' },
+        },
+      ],
+    };
+    charts.channel.setOption(option, true);
+  }
+
+  // ---------- 履约 ----------
+  function renderSla() {
+    const platforms = DATA.platform_totals.slice().sort((a, b) => b.gmv - a.gmv).map(p => p.platform);
+    const lookup = {};
+    DATA.sla_distribution.forEach(r => {
+      lookup[r.platform] = lookup[r.platform] || {};
+      lookup[r.platform][r.sla_bucket] = r.share;
+    });
+    const rate = {};
+    DATA.platform_totals.forEach(p => { rate[p.platform] = p.sla48_rate; });
+    const series = BUCKETS.map((b, i) => ({
+      name: b, type: 'bar', stack: 'sla', barWidth: 15,
+      itemStyle: { color: SLA_COLORS[i], borderRadius: i === 0 ? [6, 0, 0, 6] : i === BUCKETS.length - 1 ? [0, 6, 6, 0] : 0 },
+      data: platforms.map(p => lookup[p][b]),
+      emphasis: { focus: 'series' },
+      label: {
+        show: i === 0,
+        position: 'inside',
+        color: '#fff',
+        fontSize: 10,
+        formatter: pr => (pr.value * 100).toFixed(0) + '%',
+      },
+    }));
+    const option = {
+      animationDuration: 500,
+      grid: { left: 104, right: 54, top: 30, bottom: 8 },
+      tooltip: {
+        trigger: 'axis', axisPointer: { type: 'shadow' },
+        backgroundColor: '#fff', borderColor: '#e6eaf2', padding: [9, 12],
+        textStyle: { color: '#0f172a', fontSize: 11.5 },
+        extraCssText: 'box-shadow:0 10px 24px -12px rgba(15,23,42,.35);border-radius:8px;',
+        formatter: ps => {
+          const p = ps[0].axisValue;
+          let h = '<div style="font-weight:600;margin-bottom:4px">' + p + '　<span style="color:#0e9f6e;font-size:11px">48h ' + (rate[p] * 100).toFixed(1) + '%</span></div>';
+          ps.forEach(x => {
+            h += '<div style="display:flex;justify-content:space-between;gap:16px;font-size:11px;color:#4b5b70">' +
+              '<span><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:' + x.color + ';margin-right:5px"></span>' + x.seriesName + '</span>' +
+              '<span>' + (x.value * 100).toFixed(1) + '%</span></div>';
+          });
+          return h;
+        },
+      },
+      legend: {
+        top: 6, left: 0, itemWidth: 8, itemHeight: 8, itemGap: 10,
+        textStyle: { color: '#79879a', fontSize: 10 },
+      },
+      xAxis: { type: 'value', max: 1, show: false },
+      yAxis: {
+        type: 'category', data: platforms,
+        axisLine: { show: false }, axisTick: { show: false },
+        axisLabel: {
+          fontSize: 11, color: '#334155', margin: 12,
+          formatter: v => '{p|' + v + '}\n{r|48h ' + (rate[v] * 100).toFixed(1) + '%}',
+          rich: {
+            p: { fontSize: 11, color: '#334155', lineHeight: 15, fontWeight: 600 },
+            r: { fontSize: 10, color: '#79879a', lineHeight: 13 },
+          },
+        },
+      },
+      series,
+    };
+    charts.sla.setOption(option, true);
+  }
+
+  // ---------- 异常 ----------
+  function renderAnomalies() {
+    const host = document.getElementById('anomaly-list');
+    const list = DATA.anomalies.filter(a => active === '全部' || a.platform === active);
+    if (!list.length) {
+      host.innerHTML = '<div class="empty">当前平台无超出阈值的退款率异动。</div>';
+      return;
+    }
+    host.innerHTML = '';
+    const head = document.createElement('div');
+    head.className = 'arow head';
+    head.innerHTML = '<span></span><div class="combo">平台 · 品类 / 月份</div><div class="when">前 3 月基线</div><div class="pv">本期退款率</div><div class="delta">偏离</div><div class="ord">退款 / 订单</div>';
+    host.appendChild(head);
+    list.forEach(a => {
+      const row = document.createElement('div');
+      row.className = 'arow';
+      row.innerHTML =
+        '<span class="sev ' + a.severity + '"></span>' +
+        '<div class="combo">' + a.platform + ' · ' + a.category + '<span>' + a.month.replace('-', ' 年 ') + ' 月</span></div>' +
+        '<div class="when">基线 ' + (a.baseline * 100).toFixed(1) + '%</div>' +
+        '<div class="pv num">' + (a.refund_rate * 100).toFixed(1) + '%</div>' +
+        '<div class="delta num">+' + a.excess_pp.toFixed(1) + 'pp</div>' +
+        '<div class="ord num">' + fmtInt(a.refund_orders) + ' / ' + fmtInt(a.orders) + ' 单</div>';
+      host.appendChild(row);
+    });
+  }
+
+  // ---------- 结论 ----------
+  function renderInsights() {
+    const host = document.getElementById('insights');
+    host.innerHTML = DATA.insights.map((x, i) =>
+      '<div class="insight"><span class="idx">' + (i + 1) + '</span><div><h4>' + x.title + '</h4><p>' + x.body + '</p></div></div>'
+    ).join('');
+  }
+
+  // ---------- 交互 ----------
+  function setActive(platform) {
+    active = platform;
+    document.querySelectorAll('.fbtn').forEach(b => b.classList.toggle('active', b.dataset.platform === platform));
+    document.getElementById('trend-tag').textContent = platform === '全部' ? '全部平台' : platform;
+    document.getElementById('cat-tag').textContent = platform === '全部' ? '全部平台' : platform;
+    document.getElementById('ch-tag').textContent = platform === '全部' ? '全部平台' : platform;
+    document.getElementById('anomaly-tag').textContent = platform === '全部' ? '全部平台' : platform;
+    document.getElementById('view-note').textContent =
+      '当前视图：最新完整月 ' + META.latest_month + '，' + (platform === '全部' ? '全平台' : platform);
+    renderKpis();
+    renderPlatforms();
+    renderTrend();
+    renderCategory();
+    renderChannel();
+    renderAnomalies();
+  }
+
+  function init() {
+    charts.trend = echarts.init(document.getElementById('chart-trend'));
+    charts.category = echarts.init(document.getElementById('chart-category'));
+    charts.channel = echarts.init(document.getElementById('chart-channel'));
+    charts.sla = echarts.init(document.getElementById('chart-sla'));
+    renderInsights();
+    renderSla();
+    setActive('全部');
+    document.querySelectorAll('.fbtn').forEach(btn => {
+      btn.addEventListener('click', () => setActive(btn.dataset.platform));
+    });
+    window.addEventListener('resize', () => Object.values(charts).forEach(c => c.resize()));
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
