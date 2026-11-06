@@ -348,7 +348,7 @@ def run_metrics(settings: Settings) -> Path:
 
     payload = build_payload(sales, fulfillment, dim_date)
     out = data_dir / "metrics.json"
-    out.write_text(json.dumps(payload, ensure_ascii=False, indent=2, default=float), encoding="utf-8")
+    out.write_text(json.dumps(payload, ensure_ascii=False, indent=2, default=float), encoding="utf-8", newline="\n")
 
     meta = payload["meta"]
     logger.info(

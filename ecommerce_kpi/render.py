@@ -44,6 +44,6 @@ def render_dashboard(settings: Settings) -> str:
     ).replace(ECHARTS_PLACEHOLDER, echarts_path.read_text(encoding="utf-8"))
 
     out = settings.dashboard_dir / "index.html"
-    out.write_text(html, encoding="utf-8")
+    out.write_text(html, encoding="utf-8", newline="\n")
     logger.info("看板已生成：%s（%.2f MB，ECharts 已内联，可离线双击打开）", out.name, out.stat().st_size / 1024 / 1024)
     return str(out)

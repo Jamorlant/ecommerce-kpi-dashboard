@@ -266,7 +266,7 @@ def write_dataset(frames: dict[str, pd.DataFrame], data_dir: Path) -> dict[str, 
     written: dict[str, Path] = {}
     for name, frame in frames.items():
         path = data_dir / f"{name}.csv"
-        frame.to_csv(path, index=False, encoding="utf-8")
+        frame.to_csv(path, index=False, encoding="utf-8", lineterminator="\n")
         written[name] = path
         logger.debug("写入 %s（%s 行）", path.name, f"{len(frame):,}")
     return written

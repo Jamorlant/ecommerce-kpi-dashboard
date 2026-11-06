@@ -1,0 +1,5 @@
+# 统一换行符为 LF：CI 会逐字节校验重建产物，Windows 的 CRLF 会导致假失败
+* text=auto eol=lf
+
+*.png binary
+*.gif binary
