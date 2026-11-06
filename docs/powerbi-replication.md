@@ -5,7 +5,7 @@
 ## 1. 前提
 
 - Power BI Desktop（2023 年及以后版本均可），中文界面。
-- 已运行 `python scripts/generate_data.py`，`data/` 下有三个 CSV。
+- 已运行 `python -m ecommerce_kpi generate`，`data/` 下有三个 CSV。
 - 数据是合成数据，仅用于演示，见 README 的数据说明。
 
 ## 2. 导入数据
@@ -207,5 +207,5 @@ IF (
 ## 7. 刷新与发布
 
 - 本地发布到"我的工作区"后，在"数据集设置"中配置 CSV 路径或改为导入模式；本作品集为静态数据，直接"导入"即可，无需网关。
-- 若要保持可复现，请在发布说明中注明"数据由 `scripts/generate_data.py` 生成，种子 20260101"。
+- 若要保持可复现，请在发布说明中注明"数据由 `python -m ecommerce_kpi generate` 生成，种子 20260101"。
 - Power BI 文件（.pbix）体积较大，建议单独放在 Release 附件而不是主仓库，本仓库只保留本说明与原始 CSV。

@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements-dev.txt
+
+      - name: Lint
+        run: |
+          ruff check .
+          ruff format --check .
+
+      - name: Test
+        run: pytest
+
+      - name: Rebuild pipeline
+        run: python -m ecommerce_kpi all
+
+      - name: Rebuild is byte-identical (fixed seed)
+        run: git diff --exit-code -- data/metrics.json data/fact_sales.csv data/fact_fulfillment.csv
+
+      - name: Dashboard is self-contained
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          html = Path("dashboard/index.html").read_text(encoding="utf-8")
+          assert "__DATA_JSON__" not in html, "数据占位符未被替换"
+          assert "__ECHARTS__" not in html, "ECharts 占位符未被替换"
+          assert '"meta"' in html, "数据未内联"
+          assert len(html) > 1_000_000, "单文件体积异常，ECharts 可能未内联"
+          print(f"dashboard/index.html OK ({len(html):,} 字节)")
+          PY

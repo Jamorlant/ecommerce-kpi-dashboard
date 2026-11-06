@@ -2,3 +2,12 @@ __pycache__/
 *.pyc
 .venv/
 .DS_Store
+
+# 本地配置（.env.example 才是入库的那份）
+.env
+
+# 工具缓存
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/

@@ -1,0 +1,27 @@
+name = "ecommerce-kpi-dashboard"
+version = "1.0.0"
+description = "跨平台电商 KPI 看板：合成数据 → 指标口径 → 单文件离线 HTML"
+requires-python = ">=3.11"
+dependencies = [
+    "pandas>=2.1,<4",
+    "numpy>=1.26,<3",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+exclude = [".venv", "dashboard/vendor"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B"]
+ignore = [
+    "E501",  # 长行由 ruff format 兜底，中文注释不强制断行
+]
+
+[tool.ruff.format]
+quote-style = "double"
